@@ -19,7 +19,6 @@ def main():
         company_id = add_company(conn, employer_data['name'], employer_data.get('description', ''), employer_data.get('vacancies_url', ''))
 
         for vacancy in vacancies:
-            # Проверка зарплаты
             salary_info = vacancy.get('salary')
             salary = salary_info.get('from') if salary_info else None  # Если salary_info отсутствует, устанавливаем salary в None
 
