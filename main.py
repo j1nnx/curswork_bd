@@ -21,7 +21,7 @@ def main():
         for vacancy in vacancies:
             # Проверка зарплаты
             salary_info = vacancy.get('salary')
-            salary = salary_info.get('from') if salary_info else None  # Если salary_info отсутствует, устанавливаем salary в None
+            salary = salary_info.get('from') if salary_info else None
 
             add_vacancy(conn, vacancy['name'], salary, vacancy.get('alternate_url'), company_id)
 
