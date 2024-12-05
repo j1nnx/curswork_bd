@@ -1,10 +1,10 @@
-# Проект для анализа вакансий с hh.ru
-##### Этот проект собирает данные о компаниях и вакансиях с помощью API HeadHunter (hh.ru) и сохраняет их в базе данных PostgreSQL. Данные можно просматривать и анализировать через командную строку с помощью интерфейса пользователя, реализованного в основном модуле main.py.
+# Project for analyzing vacancies from hh.ru
+##### This project collects data on companies and vacancies using the HeadHunter API (hh.ru) and stores it in a PostgreSQL database. The data can be viewed and analyzed via the command line using the user interface implemented in the main module main.py.
 
-## Структура проекта
-### api.py: Модуль для взаимодействия с API HeadHunter, содержащий функции для получения данных о работодателях и вакансиях.
-### db_manager.py: Модуль для управления базой данных, включает методы для получения статистики и данных из базы.
-### setup_db.py: Скрипт для создания базы данных и таблиц, а также функций для добавления компаний и вакансий.
-### main.py: Основной модуль, запускающий процесс создания базы данных, загрузки данных из API и предоставляющий пользователю интерфейс для работы с данными.
-### config.py: Выводит содержимое таблиц и вакансий в таблице и проверяет подключение к database.ini
-### database.ini: Файл конфигурации с параметрами подключения к базе данных.
+## Project structure
+### api.py: Module for interacting with the HeadHunter API, containing functions for obtaining data on employers and vacancies.
+### db_manager.py: Module for managing the database, includes methods for obtaining statistics and data from the database.
+### setup_db.py: Script for creating a database and tables, as well as functions for adding companies and vacancies.
+### main.py: The main module that starts the process of creating a database, loading data from the API and providing the user with an interface for working with the data.
+### config.py: Displays the contents of tables and vacancies in the table and checks the connection to database.ini
+### database.ini: Configuration file with parameters for connecting to the database.

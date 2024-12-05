@@ -2,20 +2,25 @@ import psycopg2
 
 
 def create_database():
+    """This function is responsible for creating a database table"""
+    # connect with my database
     conn = psycopg2.connect(dbname='postgres', user='postgres', password='simplepassword123', host='localhost')
     conn.autocommit = True
     cursor = conn.cursor()
-
+    # Install database in my project
     cursor.execute("DROP DATABASE IF EXISTS hh_vacancies;")
     cursor.execute("CREATE DATABASE hh_vacancies;")
     cursor.close()
     conn.close()
 
 
+#
 def create_tables():
+    """create db table"""
     conn = psycopg2.connect(dbname='hh_vacancies', user='postgres', password='simplepassword123', host='localhost')
     cursor = conn.cursor()
 
+    # first table companies
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS companies (
             id SERIAL PRIMARY KEY,
@@ -25,6 +30,7 @@ def create_tables():
         );
     """)
 
+    # second table vacanciess
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS vacancies (
             id SERIAL PRIMARY KEY,
@@ -42,7 +48,7 @@ def create_tables():
 
 def add_company(conn, name, description, vacancies_url):
     """
-    Добавляет компанию в таблицу companies.
+    Adds a company to the companies table.
     """
     cursor = conn.cursor()
     cursor.execute("""
@@ -57,7 +63,7 @@ def add_company(conn, name, description, vacancies_url):
 
 def add_vacancy(conn, title, salary, url, company_id):
     """
-    Добавляет вакансию в таблицу vacancies.
+    Adds a vacancy to the vacancies table.
     """
     cursor = conn.cursor()
     cursor.execute("""
