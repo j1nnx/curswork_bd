@@ -5,36 +5,43 @@ import psycopg2
 
 
 def main():
+    # Creates the database and tables for storing the scraped data.
     create_database()
     create_tables()
 
+    # Establishes a connection to the newly created database.
     conn = psycopg2.connect(dbname='hh_vacancies', user='postgres', password='simplepassword123', host='localhost')
 
+    # Employer IDs to fetch data for.
     employer_ids = [1455, 1740, 78638]
 
     for employer_id in employer_ids:
+        # Fetches employer and vacancy data from the HH.ru API.
         employer_data = HHApi.get_employer_data(employer_id)
         vacancies = HHApi.get_vacancies(employer_id)
 
+        # Adds the employer data to the database.
         company_id = add_company(conn, employer_data['name'], employer_data.get('description', ''), employer_data.get('vacancies_url', ''))
 
+        # Adds each vacancy for the employer.
         for vacancy in vacancies:
-            # Проверка зарплаты
             salary_info = vacancy.get('salary')
-            salary = salary_info.get('from') if salary_info else None  # Если salary_info отсутствует, устанавливаем salary в None
+            salary = salary_info.get('from') if salary_info else None
 
             add_vacancy(conn, vacancy['name'], salary, vacancy.get('alternate_url'), company_id)
 
     db_manager = DBManager(dbname='hh_vacancies', user='postgres', password='simplepassword123')
 
-    print('Выберите действие:')
-    print('1: Посмотреть количество вакансий по компаниям')
-    print('2: Посмотреть все вакансии')
-    print('3: Средняя заработная плата')
-    print('4: Вакансии с зарплатой выше средней')
-    print('5: Поиск вакансий по ключевому слову')
+    # Console menu for database interactions.
+    print('Choose an action:')
+    print('1: View number of vacancies by company')
+    print('2: View all vacancies')
+    print('3: View average salary')
+    print('4: View vacancies with salary above average')
+    print('5: Search vacancies by keyword')
 
-    number = input('Введите номер действия: ')
+    # Handles user input for the d esired action.
+    number = input('Enter the action number: ')
     if number == '1':
         print(db_manager.get_companies_and_vacancies_count())
     elif number == '2':
@@ -44,10 +51,10 @@ def main():
     elif number == '4':
         print(db_manager.get_vacancies_with_higher_salary())
     elif number == '5':
-        keyword = input("Введите ключевое слово: ")
+        keyword = input("Enter a keyword: ")
         print(db_manager.get_vacancies_with_keyword(keyword))
     else:
-        print("Неверное действие. Попробуйте снова.")
+        print("Invalid action. Please try again.")
 
     conn.close()
 
