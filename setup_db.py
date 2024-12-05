@@ -2,25 +2,29 @@ import psycopg2
 
 
 def create_database():
-    """This function is responsible for creating a database table"""
-    # connect with my database
+    """Creates the main database for storing company and vacancy data."""
+    # Connect in my database
     conn = psycopg2.connect(dbname='postgres', user='postgres', password='simplepassword123', host='localhost')
     conn.autocommit = True
+    # Open cursor from my database
     cursor = conn.cursor()
-    # Install database in my project
+
+    # Drops the database if it exists to avoid conflicts.
     cursor.execute("DROP DATABASE IF EXISTS hh_vacancies;")
+    # Creates a new database named `hh_vacancies`.
     cursor.execute("CREATE DATABASE hh_vacancies;")
-    cursor.close()
-    conn.close()
+    cursor.close()  # Close cursor in my database
+    conn.close()  # Close connect in my database
 
 
-#
 def create_tables():
-    """create db table"""
+    """Defines and creates the database tables for storing company and vacancy data."""
+    # Connect in my database
     conn = psycopg2.connect(dbname='hh_vacancies', user='postgres', password='simplepassword123', host='localhost')
+    # Open cursor from my database
     cursor = conn.cursor()
 
-    # first table companies
+    # Table for storing companies and their details.
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS companies (
             id SERIAL PRIMARY KEY,
@@ -30,7 +34,7 @@ def create_tables():
         );
     """)
 
-    # second table vacanciess
+    # Table for storing vacancies and linking them to companies.
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS vacancies (
             id SERIAL PRIMARY KEY,
@@ -41,34 +45,38 @@ def create_tables():
         );
     """)
 
-    conn.commit()
-    cursor.close()
-    conn.close()
+    conn.commit()  # Saves all changes.
+    cursor.close()  # Close cursor in my database
+    conn.close()  # Close connect in my database
 
 
 def add_company(conn, name, description, vacancies_url):
     """
-    Adds a company to the companies table.
+    Inserts a new company record into the `companies` table.
+    Returns the ID of the newly inserted company.
     """
+    # Open cursor from my database
     cursor = conn.cursor()
     cursor.execute("""
         INSERT INTO companies (name, description, vacancies_url) 
         VALUES (%s, %s, %s) RETURNING id;
     """, (name, description, vacancies_url))
-    company_id = cursor.fetchone()[0]
-    conn.commit()
-    cursor.close()
+    company_id = cursor.fetchone()[0]  # Fetches the generated ID.
+    conn.commit()  # Close connect in my database
+    cursor.close()  # Close cursor in my database
     return company_id
 
 
 def add_vacancy(conn, title, salary, url, company_id):
     """
-    Adds a vacancy to the vacancies table.
+    Inserts a new vacancy record into the `vacancies` table.
+    Links the vacancy to its corresponding company.
     """
+    # Open cursor from my database
     cursor = conn.cursor()
     cursor.execute("""
         INSERT INTO vacancies (title, salary, url, company_id) 
         VALUES (%s, %s, %s, %s);
     """, (title, salary, url, company_id))
-    conn.commit()
-    cursor.close()
+    conn.commit()  # Close connect in my database
+    cursor.close()  # Close cursor in my database
